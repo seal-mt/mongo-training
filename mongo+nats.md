@@ -1,10 +1,12 @@
 # Architecture
 
-![Architecure](./architecture2.png)
+![Architecure](./architecture3.png)
 
 ## Mongo Config
 
 ### Cache einschränken
+
+Auf Rechnern mit wenig RAM kann der MongoDB Cache eingeschränkt werden. Erfahrungsgemäß sollten es **mindestens* 2GB sein.
 
 ```yaml
 storage:
@@ -46,7 +48,7 @@ Lösungsschritte:
 
 ### Eine MongoDB im Cluster funktioniert nicht mehr
 
-Nach längerem ausfall eines MongoDB Service kann es passieren, dass er sich nach dem Hochfahren nicht mehr synchronisieren kann. Hier hilft nur eine vollständige Neusynchronisierung.
+Nach längerem Ausfall eines MongoDB Service kann es passieren, dass er sich nach dem Hochfahren nicht mehr synchronisieren kann. Hier hilft nur eine vollständige Neusynchronisierung.
 
 Lösungsschritte:
 
@@ -55,6 +57,34 @@ Lösungsschritte:
 - Betroffenen MongoDB Service herunterfahren
 
 - Alle Dateien im MongoDB Datenverzeichnis (Linux: /opt/seal/data/seal-mongodb, Windows: c:\ProgrammData\SEAL Systems\data\seal-mongo) löschen. **Achtung:** nicht das Verzeichnis selbst löschen.
+
+### TLS Zertifikat funktioniert nicht
+
+Generell bei Fehlern mit Kundenzertifikaten prüfen:
+
+- Liegen Zertifikat und Key im PEM Format vor. Andere Formate werden nicht akzeptiert.
+
+- Wurden Zertifikat und Key korrekt in eine gemeinsame Datei kopiert. Die Struktur muss wie folgt aussehen, wobei die Reihenfolge von Zertifikat & Key egal ist:
+  ```
+  -----BEGIN CERTIFICATE-----
+  <Base64 kodiertes Zertifikat>
+  -----END CERTIFICATE-----
+  -----BEGIN PRIVATE KEY-----
+  <Base64 kodierter Key>
+  -----END PRIVATE KEY-----
+  ```
+
+- Gibt es ein CA Zertifikat und wurde es korrekt konfiguriert, siehe [TLS CA Zertifikate](#tls-ca-zertifikate)
+
+Die Fehlermeldungen im MongoDB Logfile sind in der Regel aussagekräftig und weisen sofort in die richtige Richtung, siehe Beispiele unten.
+
+Beispiele:
+
+"The use of TLS without specifying a chain of trust is no longer supported": es fehlt ein CA Zertifikat, siehe [TLS CA Zertifikate](#tls-ca-zertifikate).
+
+"The use of both a CA File and the System Certificate store is not supported.":  "CAFile" und "tlsUseSystemCA" sind vorhanden, siehe [TLS CA Zertifikate](#tls-ca-zertifikate).
+
+"Can not set up PEM key file.": die Datei auf die "certificateKeyFile" verweist ist nicht korrekt. Hier gib tes mehrere Möglichkeiten. Entweder die Datei enthält nur das Zertifikat oder nur den Key, oder Zertifikat/Key ist generell kaputt.
 
 
 ### ReplicaSet nicht initialisiert
