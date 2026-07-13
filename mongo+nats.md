@@ -207,3 +207,11 @@ trace: true
 Keine bekannten Probleme!
 
 **Aber:** Es gab im seal-co-notifier ein Problem, dort wurde der NATS KV Store nicht korrekt. Ist mit seal-co-notifier ab Version 5.1.2 und PLOSSYS Output Engine 7.4.0 behoben.
+
+### NATS nützliche Kommandos
+
+#### Verbindung zum Service prüfen
+
+```bash
+nats server check connection -s nats://<hostname>:4222
+```
