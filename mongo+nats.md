@@ -1,6 +1,6 @@
 # MongoDB & NATS
 
-## Architektur
+## PLOSSYS Output Engine Architektur
 
 ![Architecure](./architecture3.png)
 
@@ -89,6 +89,8 @@ Generell bei Fehlern mit Kundenzertifikaten prüfen:
 Die Fehlermeldungen im MongoDB Logfile sind in der Regel aussagekräftig und weisen sofort in die richtige Richtung.
 
 Beispiele für Fehlermeldungen:
+
+"The provided SSL certificate is expired or not yet valid.": Das Zertifikat ist nicht (mehr) gültig, es muss ein neues Zertifikat generiert werden.
 
 "The use of TLS without specifying a chain of trust is no longer supported ...": es fehlt ein CA Zertifikat, siehe [TLS CA Zertifikate](#tls-ca-zertifikate).
 
