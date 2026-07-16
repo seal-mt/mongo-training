@@ -4,7 +4,7 @@
 
 ![Architecure](./architecture3.png)
 
-MongoDB und NATS bilden die Infrastruktur eines Clusters. Jeglicher Datenaustausch zwischen einzelnen NodeJs Services findet über die Infrastruktur-Dienste statt.
+MongoDB und NATS bilden die Infrastruktur unserer Software. Jeglicher Datenaustausch zwischen einzelnen NodeJs Services findet über die Infrastruktur-Dienste statt, unabhängig davon, ob ob ein Cluster oder ein einzelner Server zum Einsatz kommt.
 
 ## MongoDB
 
