@@ -4,6 +4,8 @@
 
 ![Architecure](./architecture3.png)
 
+MongoDB und NATS bilden die Infrastruktur eines Clusters. Jeglicher Datenaustausch zwischen einzelnen NodeJs Services findet über die Infrastruktur-Dienste statt.
+
 ## MongoDB
 
 ### MongoDB Config
