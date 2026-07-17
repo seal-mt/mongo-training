@@ -64,9 +64,9 @@ Lösungsschritte:
 
 - Betroffenen MongoDB Service herunterfahren
 
-- Alle Dateien im MongoDB Datenverzeichnis (Linux: /opt/seal/data/seal-mongodb, Windows: c:\ProgrammData\SEAL Systems\data\seal-mongo) löschen. **Achtung:** nicht das Verzeichnis selbst löschen.
+- Alle Dateien im Datenverzeichnis der betroffenen MongoDB (Linux: /opt/seal/data/seal-mongodb, Windows: c:\ProgrammData\SEAL Systems\data\seal-mongo) löschen. **Achtung:** nicht das Verzeichnis selbst löschen.
 
-- MongoDB wieder starten und so lange warten bis "rs.status()" nicht mehr "RECOVERING" anzeigt. Das kann je nach Datenmenge 10-15 Minuten dauern.
+- Betroffene MongoDB wieder starten und so lange warten bis "rs.status()" nicht mehr "RECOVERING" anzeigt. Das kann je nach Datenmenge 10-15 Minuten dauern.
 
 - SEAL Software auf allen Rechnern im Cluster wieder starten
 
@@ -88,7 +88,7 @@ Generell bei Fehlern mit Kundenzertifikaten prüfen:
 
 - Gibt es ein CA Zertifikat und wurde es korrekt konfiguriert, siehe [TLS CA Zertifikate](#tls-ca-zertifikate)
 
-Die Fehlermeldungen im MongoDB Logfile sind in der Regel aussagekräftig und weisen sofort in die richtige Richtung.
+- Logmeldungen prüfen. Die Fehlermeldungen im MongoDB Logfile sind in der Regel aussagekräftig und weisen sofort in die richtige Richtung.
 
 Beispiele für Fehlermeldungen:
 
@@ -184,7 +184,7 @@ Zum Prüfen des NATS Status kann der Monitoring Port in der "nats.conf" eingesch
 monitor_port: 8222
 ```
 
-Nach NATS Neustart kann im Browser der Status angezeigt werden. Falls auf dem Server kein Browser vorliegt, nicht vergessen den Port in der Firewall frei zu schalten, falls noch nicht erledigt.
+Nach NATS Neustart kann im Browser der Status angezeigt werden. Falls auf dem Server kein Browser vorliegt und von außen darauf zugegriffen werden muss, nicht vergessen den Port in der Firewall frei zu schalten, falls noch nicht erledigt.
 
 Die Startseite des Monitoring sieht so aus:
 
@@ -210,7 +210,7 @@ trace: true
 
 Keine bekannten Probleme!
 
-**Aber:** Es gab im seal-co-notifier ein Problem, dort wurde der NATS KV Store nicht korrekt. Ist mit seal-co-notifier ab Version 5.1.2 und PLOSSYS Output Engine 7.4.0 behoben.
+**Aber:** Es gab im seal-co-notifier ein Problem, dort wurde auf den NATS KV Store nicht korrekt zugegriffen. Ist mit seal-co-notifier ab Version 5.1.2 und PLOSSYS Output Engine 7.4.0 behoben.
 
 ### NATS nützliche Kommandos
 
