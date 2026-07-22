@@ -2,11 +2,13 @@
 
 ## PLOSSYS Output Engine Architektur
 
-![Architecure](./architecture3.png)
+![Architecure](./pictures/architecture3.png)
 
 MongoDB und NATS bilden die Infrastruktur unserer Software. Jeglicher Datenaustausch zwischen einzelnen NodeJs Services findet über die Infrastruktur-Dienste statt, unabhängig davon, ob ob ein Cluster oder ein einzelner Server zum Einsatz kommt.
 
 ## MongoDB
+
+Siehe auch PLOSSYS Output Engine Dokumentation: [Troubleshooting: MongoDB](https://plossys-5.docs.sealsystems.de/troubleshooting/mongodb_help).
 
 ### MongoDB Config
 
@@ -64,7 +66,7 @@ Lösungsschritte:
 
 - Betroffenen MongoDB Service herunterfahren
 
-- Alle Dateien im Datenverzeichnis der betroffenen MongoDB (Linux: /opt/seal/data/seal-mongodb, Windows: c:\ProgrammData\SEAL Systems\data\seal-mongo) löschen. **Achtung:** nicht das Verzeichnis selbst löschen.
+- Alle Dateien im Datenverzeichnis der betroffenen MongoDB (Linux: `/opt/seal/data/seal-mongodb`, Windows: `c:\ProgrammData\SEAL Systems\data\seal-mongo`) löschen. **Achtung:** nicht das Verzeichnis selbst löschen.
 
 - Betroffene MongoDB wieder starten und so lange warten bis "rs.status()" nicht mehr "RECOVERING" anzeigt. Das kann je nach Datenmenge 10-15 Minuten dauern.
 
@@ -88,7 +90,7 @@ Generell bei Fehlern mit Kundenzertifikaten prüfen:
 
 - Gibt es ein CA Zertifikat und wurde es korrekt konfiguriert, siehe [TLS CA Zertifikate](#tls-ca-zertifikate)
 
-- Logmeldungen prüfen. Die Fehlermeldungen im MongoDB Logfile sind in der Regel aussagekräftig und weisen sofort in die richtige Richtung.
+- Logmeldungen prüfen. Die Fehlermeldungen im MongoDB Logfile sind in der Regel aussagekräftig und weisen sofort in die richtige Richtung (Linux: `/var/log/seal/mongod.log`, Windows: `C:\ProgramData\SEAL Systems\log\mongod.log`).
 
 Beispiele für Fehlermeldungen:
 
@@ -188,11 +190,11 @@ Nach NATS Neustart kann im Browser der Status angezeigt werden. Falls auf dem Se
 
 Die Startseite des Monitoring sieht so aus:
 
-![Monitor](./nats_monitor.png)
+![Monitor](./pictures/nats_monitor.png)
 
 Cluster Verbindungen unter dem Punkt "General":
 
-![Cluster Connections](./nats_connection.png)
+![Cluster Connections](./pictures/nats_connection.png)
 
 
 #### Debug und Trace Meldungen einschalten
@@ -208,14 +210,36 @@ trace: true
 
 ### NATS Probleme
 
-Keine bekannten Probleme!
+Keine bekannten Probleme mit den NATS Server!
 
-**Aber:** Es gab im seal-co-notifier ein Problem, dort wurde auf den NATS KV Store nicht korrekt zugegriffen. Ist mit seal-co-notifier ab Version 5.1.2 und PLOSSYS Output Engine 7.4.0 behoben.
+**Aber:** Es gab im seal-co-notifier ein Problem, dort wurde auf den NATS KV Store nicht korrekt zugegriffen. Das Problem ist mit seal-co-notifier ab Version 5.1.2 und PLOSSYS Output Engine 7.4.0 behoben. Für ältere Versionen, bzw. bei noch nicht angepasster `oms_submit.cfg` ist unter [Troubleshooting: No SAP Notifications](https://plossys-5.docs.sealsystems.de/troubleshooting/sap_notifications) in der PLOSSYS Output Engine Dokumentation der Weg zur Fehlerbehebung beschrieben.
 
 ### NATS nützliche Kommandos
 
-#### Verbindung zum Service prüfen
+Der NATS Client befindet sich nicht im Suchpfad des Betriebssystems, deshalb muss er entweder mit Pfad aufgerufen, oder in das Installationsverzeichnis wechselt werden.
+
+Windows:
+
+```powershell
+cd "C:\Program Files\SEAL Systems\seal-nats"
+```
+
+Linux:
 
 ```bash
-nats server check connection -s nats://<hostname>:4222
+cd /opt/seal/seal-nats
+```
+
+#### Verbindung zum Service prüfen
+
+Windows:
+
+```powershell
+.\nats.exe server check connection [-s nats://<hostname>:4222]
+```
+
+Linux:
+
+```bash
+./nats server check connection [-s nats://<hostname>:4222]
 ```
