@@ -165,6 +165,8 @@ mongosh --tls --tlsAllowInvalidCertificates --eval "rs.status()"
   spooler-ui              96.00 KiB
   ```
 
+  **Achtung**: Die Datenbanken `admin`, `config` und `local` sind für den Betrieb der MongoDB notwendig. Diese Datenbanken dürfen weder gelöscht noch ohne fundiertes Hintergrundwissen geändert werden.
+
 `use <db name>` wechselt in die angegebene Datenbank . Beispiel:
 
 ```
