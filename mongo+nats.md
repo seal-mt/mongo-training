@@ -6,6 +6,34 @@
 
 MongoDB und NATS bilden die Infrastruktur unserer Software. Jeglicher Datenaustausch zwischen einzelnen NodeJs Services findet über die Infrastruktur-Dienste statt, unabhängig davon, ob ob ein Cluster oder ein einzelner Server zum Einsatz kommt.
 
+## PLOSSYS Output Engine Konfiguration
+
+Die PLOSSYS Output Engine speichert alle(!) Daten in der MongoDB. Jede Art von Daten (Jobs, Printers, Notifications, ...) wird in einer eigenen Datenbank gespeichert. Pro Art von Daten gibt es in der PLOSSYS Output Engine eine eigene Konfiguration in Form einer URL. Beispiele:
+
+  ```
+  MONGO_JOBS_URL: mongodb://db,db2,db3:27017/spooler-jobs
+  MONGO_PRINTERS_URL: mongodb://db,db2,db3:27017/spooler-printers
+  ```
+  
+Die Hostnamen aller MongoDB Server eines Clusters müssen in dieser URL aufgeführt sein, im obigen Beispiel `db`, `db2` und `db3`.
+
+Für weitere Informationen siehe PLOSSYS Output Engine Dokumentation: [Configure the MongoDB Keys in PLOSSYS Output Engine](https://plossys-5.docs.sealsystems.de/linux/config_mandatory/config_plossys_5_server/config_mongodb_for_p5).
+
+
+Für die NATS Konfiguration müssen Hostname und Port der Server in einer mit Kommas separierten Liste stehen. Beispiel:
+
+  ```
+  BROKER_SERVERS: 'nats1:4222,nats2:4222,nats3:4222'
+  ```
+
+Für weitere Informationen siehe PLOSSYS Output Engine Dokumentation: [BROKER_SEVERS](https://plossys-5.docs.sealsystems.de/reference/keys/service_keys.html#broker_servers).
+
+## Notifications
+
+![Notifications](./pictures/notifications.png)
+
+Im speziellen Fall der Rückmendungen werden MongoDB und NATS benötigt, um die Zustellung von Nachrichten garantieren zu können.
+
 ## MongoDB
 
 Siehe auch PLOSSYS Output Engine Dokumentation: [Troubleshooting: MongoDB](https://plossys-5.docs.sealsystems.de/troubleshooting/mongodb_help).
@@ -152,28 +180,32 @@ mongosh --tls --tlsAllowInvalidCertificates --eval "rs.status()"
 
   ```
   admin                  128.00 KiB
-  config                 364.00 KiB
-  local                  234.54 MiB
-  spooler-actions          8.00 KiB
+  config                 360.00 KiB
+  local                  312.14 MiB
   spooler-configs        108.00 KiB
-  spooler-jobs            30.33 MiB
+  spooler-jobs             2.53 MiB
   spooler-locks          108.00 KiB
-  spooler-notifications  116.00 KiB
+  spooler-notifications   96.00 KiB
   spooler-preprocess     108.00 KiB
-  spooler-printers       484.00 KiB
+  spooler-printers       492.00 KiB
   spooler-remote-sites    72.00 KiB
   spooler-ui              96.00 KiB
   ```
 
   **Achtung**: Die Datenbanken `admin`, `config` und `local` sind für den Betrieb der MongoDB notwendig. Diese Datenbanken dürfen weder gelöscht noch ohne fundiertes Hintergrundwissen geändert werden.
 
-`use <db name>` wechselt in die angegebene Datenbank . Beispiel:
+`use <db name>` wechselt in die angegebene Datenbank. Beispiel: `use spooler-jobs`
 
-```
-use spooler-jobs
-```
+`show collections` zeigt alle Collections (entspricht Tabellen in SQL Datenbanken) in der mit `use` ausgewählten Datenbank an. Beispiel:
 
-`db.dropDatabase()` löscht die mit `use` aktuell ausgewählte Datenbank. **Nur im Notfall benutzen!**
+  ```
+  fs.chunks
+  fs.files
+  jobs
+  outbox
+  ```
+
+`db.<collection>.countDocuments()` zählt die Dokument in der Collection `<collection>` der mit `use` ausgewählten Datenbank. Beispiel: `db.outbox.countDocuments()`
 
 ## NATS
 
